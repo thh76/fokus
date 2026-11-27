@@ -1,35 +1,51 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { ActionButton } from "../../components/ActionButton";
+import { FokusButton } from "../../components/FokusButton";
+import { Timer } from "../../components/Timer";
+
+const pomodoro = [
+  {
+    id: 'focus',
+    initialValue: 25,
+    image: require('./pomodoro.png'),
+    display: 'Foco',
+
+  },
+  {
+    id: 'short',
+    initialValue: 5,
+    image: require('./short.png'),
+    display: 'Pausa Curta',
+  },
+  {
+    id: 'long',
+    initialValue: 15,
+    image: require('./long.png'),
+    display: 'Pausa Longa',
+  },
+]
 
 export default function Index() {
+
+  const [timerType, setTimerType] = useState (pomodoro[0])
+
   return (
     <View style={styles.container}>
-      <Image source={require('./pomodoro.png')}/>
+      <Image source={timerType.image}/>
       <View style={styles.actions}>
         <View style={styles.context}>
-          <Pressable style={styles.contextButtonActive}>
-            <Text style={styles.contextButtonText}>
-              Foco
-            </Text>
-          </Pressable>
-          <Pressable>
-            <Text style={styles.contextButtonText}>
-              Pausa Curta
-            </Text>
-          </Pressable>
-          <Pressable>
-            <Text style={styles.contextButtonText}>
-              Pausa Longa
-            </Text>
-          </Pressable>
+          {pomodoro.map( p => (
+            <ActionButton 
+              key={p.id}
+              active={ timerType.id === p.id }
+              onPress = {() => setTimerType(p)}
+              display={p.display}
+            />
+          ))}    
         </View>
-        <Text style={styles.timer}>
-          25:00
-        </Text>
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>
-            Começar
-          </Text>
-        </Pressable>
+          <Timer totalSeconds={timerType.initialValue}/>
+        <FokusButton/>
       </View>
       <View style={styles.footer}>
         <Text style={styles.footerText}>
@@ -64,32 +80,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-  },
-  contextButtonActive: {
-    backgroundColor: '#144480',
-    borderRadius: 8,
-  },
-  contextButtonText: {
-    fontSize: 12.5,
-    color: '#FFF',
-    padding: 8,
-  },
-  timer: {
-    fontSize: 54,
-    color: '#FFF',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontFamily: 'Heading Large'
-  },
-  button: {
-    backgroundColor: '#B872FF',
-    borderRadius: 32,
-    padding: 8,
-  },
-  buttonText: {
-    textAlign: 'center',
-    color: '#021123',
-    fontSize: 18,
   },
   footer: {
     width:  '80%',
